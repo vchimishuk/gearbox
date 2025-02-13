@@ -13,6 +13,7 @@ const ProgName = "gearbox"
 
 type Command interface {
 	Name() string
+	Usage() string
 	Options() []*opt.Desc
 	Args() (int, int)
 	Exec(client *transmission.Client, opts opt.Options, args []string) error
@@ -23,7 +24,7 @@ func printErr(err error) {
 }
 
 func usage() {
-	fmt.Fprintf(os.Stderr, "usage: %s [-h] command [opt]... [arg]...\n",
+	fmt.Fprintf(os.Stderr, "usage: %s command [opt]... [arg]...\n",
 		ProgName)
 }
 
@@ -36,11 +37,6 @@ func main() {
 	if len(os.Args) < 2 {
 		usage()
 		os.Exit(1)
-	}
-
-	if os.Args[1] == "-h" {
-		usage()
-		os.Exit(0)
 	}
 
 	i := slices.IndexFunc(commands, func(c Command) bool {
@@ -62,14 +58,8 @@ func main() {
 	minArgs, maxArgs := cmd.Args()
 
 	opts, args, err := opt.Parse(os.Args[2:], cmdOpts)
-	if len(args) < minArgs || len(args) > maxArgs {
-		// TODO: Print command usage.
-		// usage()
-		print(opt.Usage(cmdOpts))
-		os.Exit(1)
-	}
-	if err != nil {
-		printErr(err)
+	if err != nil || len(args) < minArgs || len(args) > maxArgs {
+		fmt.Fprintf(os.Stderr, "usage: %s %s\n", ProgName, cmd.Usage())
 		os.Exit(1)
 	}
 

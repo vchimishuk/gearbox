@@ -23,6 +23,10 @@ func (c *ListCommand) Name() string {
 	return "list"
 }
 
+func (c *ListCommand) Usage() string {
+	return c.Name() + " [-ar] [-c column] [-h host] [-n count] [-p port] [-s column]"
+}
+
 func (c *ListCommand) Options() []*opt.Desc {
 	return []*opt.Desc{
 		{"a", "", opt.ArgNone, "", "display only recently active torrents"},

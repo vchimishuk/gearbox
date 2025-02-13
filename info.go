@@ -23,6 +23,10 @@ func (c *InfoCommand) Name() string {
 	return "info"
 }
 
+func (c *InfoCommand) Usage() string {
+	return c.Name() + " [-f] [-h host] [-p port]"
+}
+
 func (c *InfoCommand) Options() []*opt.Desc {
 	return []*opt.Desc{
 		{"f", "", opt.ArgNone, "", "show files list instead of general info"},
