@@ -30,6 +30,7 @@ func usage() {
 
 func main() {
 	commands := []Command{
+		NewAddCommand(),
 		NewInfoCommand(),
 		NewListCommand(),
 	}
