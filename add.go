@@ -21,7 +21,7 @@ func (c *AddCommand) Name() string {
 }
 
 func (c *AddCommand) Usage() string {
-	return c.Name() + " [-h host] [-p port]"
+	return c.Name() + " [-h host] [-p port] file..."
 }
 
 func (c *AddCommand) Options() []*opt.Desc {

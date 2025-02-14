@@ -33,6 +33,7 @@ func main() {
 		NewAddCommand(),
 		NewInfoCommand(),
 		NewListCommand(),
+		NewStatsCommand(),
 	}
 
 	if len(os.Args) < 2 {

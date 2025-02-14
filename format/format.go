@@ -21,7 +21,7 @@ func Rate(r int64) string {
 	return fmt.Sprintf("%d kB/s", r/1000)
 }
 
-func FileSize(sz int64) string {
+func Size(sz int64) string {
 	for i := len(Sizes) - 1; i >= 0; i-- {
 		n := sz / Sizes[i]
 		if n != 0 {

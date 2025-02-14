@@ -87,7 +87,7 @@ var Columns []Column = []Column{
 			return t.DownloadedTotal
 		}),
 		func(t *transmission.Torrent) string {
-			return format.FileSize(t.DownloadedTotal)
+			return format.Size(t.DownloadedTotal)
 		},
 		formatter(true),
 	},
@@ -152,7 +152,7 @@ var Columns []Column = []Column{
 			return t.TotalSize
 		}),
 		func(t *transmission.Torrent) string {
-			return format.FileSize(t.TotalSize)
+			return format.Size(t.TotalSize)
 		},
 		formatter(true),
 	},
@@ -191,7 +191,7 @@ var Columns []Column = []Column{
 			return t.UploadedTotal
 		}),
 		func(t *transmission.Torrent) string {
-			return format.FileSize(t.UploadedTotal)
+			return format.Size(t.UploadedTotal)
 		},
 		formatter(true),
 	},

@@ -24,7 +24,7 @@ func (c *InfoCommand) Name() string {
 }
 
 func (c *InfoCommand) Usage() string {
-	return c.Name() + " [-f] [-h host] [-p port]"
+	return c.Name() + " [-f] [-h host] [-p port] id"
 }
 
 func (c *InfoCommand) Options() []*opt.Desc {
@@ -101,7 +101,7 @@ func (c *InfoCommand) execFiles(client *transmission.Client, ID int) error {
 	cols[1][0] = "SIZE"
 	for i, f := range files {
 		cols[0][i+1] = f.Name
-		cols[1][i+1] = format.FileSize(f.Size)
+		cols[1][i+1] = format.Size(f.Size)
 	}
 
 	fileFmtr := format.NewColumnFormatter(false, cols[0])
