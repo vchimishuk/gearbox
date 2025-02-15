@@ -26,7 +26,7 @@ func (c *AddCommand) Usage() string {
 
 func (c *AddCommand) Options() []*opt.Desc {
 	return []*opt.Desc{
-		{"P", "", opt.ArgNone, "", "do not automatically start torrent"},
+		{"S", "", opt.ArgNone, "", "do not start torrent automatically"},
 	}
 }
 
@@ -42,7 +42,7 @@ func (c *AddCommand) Exec(client *transmission.Client, opts opt.Options, args []
 		}
 		defer f.Close()
 
-		paused := opts.Has("P")
+		paused := opts.Has("S")
 		req := &transmission.AddTorrentReq{
 			Meta:   f,
 			Paused: &paused,

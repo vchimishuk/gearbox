@@ -34,6 +34,7 @@ func main() {
 		NewInfoCommand(),
 		NewListCommand(),
 		NewStatsCommand(),
+		NewTorrentCommand(),
 	}
 
 	if len(os.Args) < 2 {
