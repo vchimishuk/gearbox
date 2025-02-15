@@ -66,6 +66,7 @@ func (c *InfoCommand) execInfo(client *transmission.Client, id int) error {
 		GetColumnMust("active"),
 		GetColumnMust("added"),
 		GetColumnMust("created"),
+		GetColumnMust("comment"),
 	}
 
 	trs, err := client.GetTorrents(context.Background(), transmission.ID(id),

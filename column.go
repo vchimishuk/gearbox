@@ -53,6 +53,19 @@ var Columns []Column = []Column{
 		formatter(false),
 	},
 	&column{
+		"comment",
+		"Comment",
+		"COMMENT",
+		transmission.TorrentFieldComment,
+		comparator(func(t *transmission.Torrent) string {
+			return t.Comment
+		}),
+		func(t *transmission.Torrent) string {
+			return t.Comment
+		},
+		formatter(false),
+	},
+	&column{
 		"created",
 		"Created",
 		"CREATED",
