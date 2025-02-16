@@ -24,15 +24,15 @@ func (c *TorrentCommand) Name() string {
 }
 
 func (c *TorrentCommand) Usage() string {
-	return c.Name() + " [-drSs] [-h host] [-l labels] [-p port] file..."
+	return c.Name() + " [-DdSs] [-h host] [-l labels] [-p port] file..."
 }
 
 func (c *TorrentCommand) Options() []*opt.Desc {
 	return []*opt.Desc{
 		{"S", "", opt.ArgNone, "", "stop torrent"},
-		{"d", "", opt.ArgNone, "", "remove also torrent data when removing torrent"},
+		{"D", "", opt.ArgNone, "", "delete also torrent data when deleting torrent"},
+		{"d", "", opt.ArgNone, "", "delete torrent"},
 		{"l", "", opt.ArgString, "", "set labels for torrent"},
-		{"r", "", opt.ArgNone, "", "remove torrent"},
 		{"s", "", opt.ArgNone, "", "start torrent"},
 	}
 }
@@ -85,8 +85,8 @@ func (c *TorrentCommand) Exec(client *transmission.Client, opts opt.Options, arg
 		}
 	}
 
-	if opts.Has("r") {
-		d := opts.Has("d")
+	if opts.Has("d") {
+		d := opts.Has("D")
 		err := client.RemoveTorrents(context.Background(), ids, d)
 		if err != nil {
 			return err
