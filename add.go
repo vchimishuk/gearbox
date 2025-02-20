@@ -4,6 +4,7 @@ import (
 	"context"
 	"math"
 	"os"
+	"strings"
 
 	"github.com/pborzenkov/go-transmission/transmission"
 	"github.com/vchimishuk/opt"
@@ -21,11 +22,12 @@ func (c *AddCommand) Name() string {
 }
 
 func (c *AddCommand) Usage() string {
-	return c.Name() + " [-h host] [-p port] file..."
+	return c.Name() + " [-S] [-h host] [-l label] [-p port] file..."
 }
 
 func (c *AddCommand) Options() []*opt.Desc {
 	return []*opt.Desc{
+		{"l", "", opt.ArgString, "", "labels attache to the torrent to"},
 		{"S", "", opt.ArgNone, "", "do not start torrent automatically"},
 	}
 }
@@ -42,10 +44,16 @@ func (c *AddCommand) Exec(client *transmission.Client, opts opt.Options, args []
 		}
 		defer f.Close()
 
+		var labels []string
+		if opts.Has("l") {
+			labels = strings.Split(opts.StringOr("l", ""), ",")
+		}
+
 		paused := opts.Has("S")
 		req := &transmission.AddTorrentReq{
 			Meta:   f,
 			Paused: &paused,
+			Labels: labels,
 		}
 
 		_, err = client.AddTorrent(context.Background(), req)

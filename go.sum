@@ -1,7 +1,4 @@
-github.com/google/go-cmp v0.4.1 h1:/exdXoGamhu5ONeUJH0deniYLWYvQwW66yvlfiiKTu0=
-github.com/google/go-cmp v0.4.1/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
-github.com/pborzenkov/go-transmission v0.2.0 h1:M2BNkMMkSzMR1R2O8/qOHrdH/9hehnryo8ydRM7VfJg=
-github.com/pborzenkov/go-transmission v0.2.0/go.mod h1:OVq5GIEww8myxj++57xDkbITDe1dBLZBIu8WcIhNSW0=
+github.com/google/go-cmp v0.6.0 h1:ofyhxvXcZhMsU5ulbFiLKl/XBFqE1GSq7atu8tAmTRI=
+github.com/google/go-cmp v0.6.0/go.mod h1:17dUlkBOakJ0+DkrSSNjCkIjxS6bF9zb3elmeNGIjoY=
 github.com/vchimishuk/opt v0.0.0-20250103221129-d823c9050e21 h1:rvN8vzumjvhKfg+Krs5X+/K78/rV+xV87xDPxvHl3Kk=
 github.com/vchimishuk/opt v0.0.0-20250103221129-d823c9050e21/go.mod h1:MW7wx9OaqU0whuX3WqVLl5i08bNC4VrYQJbJHNrWqL4=
-golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
