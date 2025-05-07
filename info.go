@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -94,6 +95,9 @@ func (c *InfoCommand) execFiles(client *transmission.Client, ID int) error {
 		return err
 	}
 	files := trs[0].Files
+	sort.Slice(files, func(i, j int) bool {
+		return files[i].Name < files[j].Name
+	})
 
 	cols := make([][]string, 2)
 	cols[0] = make([]string, len(files)+1)

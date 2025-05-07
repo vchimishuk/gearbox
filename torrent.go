@@ -24,7 +24,7 @@ func (c *TorrentCommand) Name() string {
 }
 
 func (c *TorrentCommand) Usage() string {
-	return c.Name() + " [-DdSs] [-h host] [-l labels] [-p port] file..."
+	return c.Name() + " [-DdSs] [-h host] [-l labels] [-p port] id..."
 }
 
 func (c *TorrentCommand) Options() []*opt.Desc {
