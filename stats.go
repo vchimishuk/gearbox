@@ -40,6 +40,20 @@ func (c *StatsCommand) Exec(client *transmission.Client, opts opt.Options, args 
 		return err
 	}
 
+	trs, err := client.GetTorrents(context.Background(),
+		transmission.RecentlyActive(),
+		transmission.TorrentFieldPeersGettingFromUs,
+		transmission.TorrentFieldPeersSendingToUs)
+	if err != nil {
+		return err
+	}
+	dpeers := 0
+	upeers := 0
+	for _, tr := range trs {
+		dpeers += tr.PeersGettingFromUs
+		upeers += tr.PeersSendingToUs
+	}
+
 	names := []string{
 		"Total torrents",
 		"Active torrents",
@@ -49,6 +63,8 @@ func (c *StatsCommand) Exec(client *transmission.Client, opts opt.Options, args 
 		"Ratio",
 		"Download rate",
 		"Upload rate",
+		"Downloading peers",
+		"Uploading peers",
 	}
 	vals := []string{
 		fmt.Sprintf("%d", st.Torrents),
@@ -59,6 +75,8 @@ func (c *StatsCommand) Exec(client *transmission.Client, opts opt.Options, args 
 		fmt.Sprintf("%.1f", rate(st.AllSessions.Downloaded, st.AllSessions.Uploaded)),
 		format.Rate(st.DownloadRate),
 		format.Rate(st.UploadRate),
+		fmt.Sprintf("%d", dpeers),
+		fmt.Sprintf("%d", upeers),
 	}
 
 	namesFmtr := format.NewColumnFormatter(true, names)
