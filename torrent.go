@@ -48,8 +48,8 @@ func (c *TorrentCommand) Exec(client *transmission.Client, opts opt.Options, arg
 	if (opts.Has("S") || opts.Has("s") || opts.Has("l")) && opts.Has("r") {
 		return errors.New("-r cannot be used simultaneously with -S -s or -l")
 	}
-	if opts.Has("d") && !opts.Has("r") {
-		return errors.New("-d requires -r")
+	if opts.Has("D") && !opts.Has("d") {
+		return errors.New("-D requires -d")
 	}
 
 	var ids transmission.IDList
