@@ -130,11 +130,14 @@ func main() {
 
 	host := DefaultHost
 	port := DefaultPort
-	// TODO: Check environment variables.
-	if cfg.Host != "" {
+	if h, ok := opts.String("h"); ok {
+		host = h
+	} else if cfg.Host != "" {
 		host = cfg.Host
 	}
-	if cfg.Port != 0 {
+	if p, ok := opts.Int("p"); ok {
+		port = p
+	} else if cfg.Port != 0 {
 		port = cfg.Port
 	}
 
