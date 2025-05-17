@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/pborzenkov/go-transmission/transmission"
+	"github.com/vchimishuk/gearbox/config"
 	"github.com/vchimishuk/opt"
 )
 
@@ -36,7 +37,9 @@ func (c *AddCommand) Args() (int, int) {
 	return 1, math.MaxInt
 }
 
-func (c *AddCommand) Exec(client *transmission.Client, opts opt.Options, args []string) error {
+func (c *AddCommand) Exec(client *transmission.Client, cfg *config.Config,
+	opts opt.Options, args []string) error {
+
 	for _, n := range args {
 		f, err := os.Open(n)
 		if err != nil {

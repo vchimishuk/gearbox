@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/pborzenkov/go-transmission/transmission"
+	"github.com/vchimishuk/gearbox/config"
 	"github.com/vchimishuk/gearbox/format"
 	"github.com/vchimishuk/opt"
 )
@@ -34,7 +35,9 @@ func (c *StatsCommand) Args() (int, int) {
 	return 0, 0
 }
 
-func (c *StatsCommand) Exec(client *transmission.Client, opts opt.Options, args []string) error {
+func (c *StatsCommand) Exec(client *transmission.Client, cfg *config.Config,
+	opts opt.Options, args []string) error {
+
 	st, err := client.GetSessionStats(context.Background())
 	if err != nil {
 		return err

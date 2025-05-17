@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/pborzenkov/go-transmission/transmission"
+	"github.com/vchimishuk/gearbox/config"
 	"github.com/vchimishuk/opt"
 )
 
@@ -41,7 +42,9 @@ func (c *TorrentCommand) Args() (int, int) {
 	return 1, math.MaxInt
 }
 
-func (c *TorrentCommand) Exec(client *transmission.Client, opts opt.Options, args []string) error {
+func (c *TorrentCommand) Exec(client *transmission.Client, cfg *config.Config,
+	opts opt.Options, args []string) error {
+
 	if opts.Has("S") && opts.Has("s") {
 		return errors.New("either -S or -s can be used")
 	}

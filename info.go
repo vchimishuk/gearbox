@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/pborzenkov/go-transmission/transmission"
+	"github.com/vchimishuk/gearbox/config"
 	"github.com/vchimishuk/gearbox/format"
 	"github.com/vchimishuk/opt"
 )
@@ -39,7 +40,9 @@ func (c *InfoCommand) Args() (int, int) {
 	return 1, 1
 }
 
-func (c *InfoCommand) Exec(client *transmission.Client, opts opt.Options, args []string) error {
+func (c *InfoCommand) Exec(client *transmission.Client, cfg *config.Config,
+	opts opt.Options, args []string) error {
+
 	id, err := strconv.Atoi(args[0])
 	if err != nil {
 		return errors.New("invalid torrent ID")

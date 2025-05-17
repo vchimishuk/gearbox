@@ -3,11 +3,11 @@ package main
 import (
 	"context"
 	"fmt"
-	"math"
 	"slices"
 	"strings"
 
 	"github.com/pborzenkov/go-transmission/transmission"
+	"github.com/vchimishuk/gearbox/config"
 	"github.com/vchimishuk/gearbox/format"
 	"github.com/vchimishuk/opt"
 )
@@ -42,22 +42,30 @@ func (c *ListCommand) Args() (int, int) {
 	return 0, 0
 }
 
-func (c *ListCommand) Exec(client *transmission.Client, opts opt.Options, args []string) error {
-	cols, err := parseColumns(opts.StringOr("c", "id,name"))
+func (c *ListCommand) Exec(client *transmission.Client, cfg *config.Config,
+	opts opt.Options, args []string) error {
+
+	scols := opts.StringOr("c", or(cfg.ListColumns, "id,name"))
+	cols, err := parseColumns(scols)
 	if err != nil {
 		return err
 	}
-
 	fields := ColumnsToFields(cols)
 
-	var sortCol Column
-	if opts.Has("s") {
+	ssort := ""
+	if s, ok := opts.String("s"); ok {
+		ssort = s
+	} else if cfg.ListSort != "" {
+		ssort = cfg.ListSort
+	}
+	var sort Column
+	if ssort != "" {
 		var err error
-		sortCol, err = GetColumn(opts.StringOr("s", ""))
+		sort, err = GetColumn(ssort)
 		if err != nil {
 			return err
 		}
-		fields = append(fields, sortCol.Field())
+		fields = append(fields, sort.Field())
 	}
 
 	id := transmission.All()
@@ -69,15 +77,25 @@ func (c *ListCommand) Exec(client *transmission.Client, opts opt.Options, args [
 		return err
 	}
 
-	if sortCol != nil {
-		c := sortCol.Comparator()
-		if opts.Has("r") {
+	if sort != nil {
+		c := sort.Comparator()
+		if opts.Has("s") || opts.Has("r") {
+			if opts.Has("r") {
+				c = reversed(c)
+			}
+		} else if cfg.ListReverse {
 			c = reversed(c)
 		}
+
 		slices.SortFunc(trs, c)
 	}
 
-	count := min(len(trs), opts.IntOr("n", math.MaxInt))
+	count := len(trs)
+	if c, ok := opts.Int("n"); ok {
+		count = c
+	} else if cfg.ListCount != 0 {
+		count = cfg.ListCount
+	}
 	colVals := make([][]string, len(cols))
 	for i, c := range cols {
 		colVals[i] = make([]string, count+1)
@@ -129,4 +147,12 @@ func reversed[T any](f func(a, b T) int) func(a, b T) int {
 	return func(a, b T) int {
 		return f(a, b) * -1
 	}
+}
+
+func or(a, b string) string {
+	if a != "" {
+		return a
+	}
+
+	return b
 }
