@@ -30,7 +30,6 @@ type Command interface {
 
 var Commands []Command = []Command{
 	NewAddCommand(),
-	NewInfoCommand(),
 	NewListCommand(),
 	NewStatsCommand(),
 	NewTorrentCommand(),
