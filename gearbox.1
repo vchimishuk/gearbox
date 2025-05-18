@@ -1,0 +1,253 @@
+.Dd May 17, 2025
+.Dt GEARBOX 1
+.Os
+.Sh NAME
+.Nm gearbox
+.Nd non-interactive console client for transmission-daemon
+.Sh SYNOPSIS
+.Bk -words
+.Bl -tag -width gearbox
+.It Nm
+.Op Fl H
+.Oo Ar command
+.Op Ar opt ...
+.Op Ar arg ...
+.Oc
+.El
+.Ek
+.Sh DESCRIPTION
+.Nm
+is a non-interactive console client for
+.Xr transmission-daemon 1
+.Sh OPTIONS
+The following options are supported by
+.Nm :
+.Bl -tag -width indent
+.It Fl H
+Display usage information and exit.
+.El
+.Sh COMMANDS
+The commands are supported by
+.Nm :
+.Bl -tag -width torrent
+.It Xo
+.Cm add
+.Op Fl S
+.Op Fl h Ar host
+.Op Fl l Ar label[,label...]
+.Op Fl p Ar port
+.Ar file...
+.Xc
+Add torrent-file to the server.
+Torrent is started for downloading by default.
+.Pp
+The options for
+.Cm gearbox add
+are as follows:
+.Bl -tag -width Ds
+.It Fl S
+Do not start downloading torrent automatically.
+.It Fl h Ar host
+Specify remote Transition server hostname or IP address to connect to.
+See
+.Sx Remote Address Resolution
+section for more details.
+.It Fl l Ar label[,label...]
+Set labels to the added torrent.
+.It Fl p Ar port
+Specify remote Transition server TCP port to connect to.
+See
+.Sx Remote Address Resolution
+section for more details.
+.El
+.It Xo
+.Cm list
+.Op Fl ar
+.Op Fl c Ar column[,column...]
+.Op Fl h Ar host
+.Op Fl n Ar count
+.Op Fl p Ar port
+.Op Fl s Ar column
+.Xc
+List torrents managed by Transmission server.
+.Pp
+The options for
+.Cm gearbox list
+are as follows:
+.Bl -tag -width Ds
+.It Fl a
+Display only active torrents.
+Active torrent is the torrent which has at least one connected peer who
+downloads or uploads torrent data.
+.It Fl r
+Sort torrents in reverse order.
+.It Fl c Ar column[,column...]
+List of columns to display. See
+.Sx COLUMNS
+section for the list of available columns.
+.It Fl h Ar host
+Specify remote Transition server hostname or IP address to connect to.
+See
+.Sx Remote Address Resolution
+section for more details.
+.It Fl n Ar count
+Maximum number of torrents to return in the result list.
+.It Fl p Ar port
+Specify remote Transition server TCP port to connect to.
+See
+.Sx Remote Address Resolution
+section for more details.
+.It Fl s Ar column
+Column to sort result list by. See
+.Sx COLUMNS
+section for the list of available columns.
+.El
+.It Xo
+.Cm stats
+.Op Fl h Ar host
+.Op Fl p Ar port
+.Xc
+Display server statistics.
+.Pp
+The options for
+.Cm gearbox stats
+are as follows:
+.Bl -tag -width Ds
+.It Fl h Ar host
+Specify remote Transition server hostname or IP address to connect to.
+See
+.Sx Remote Address Resolution
+section for more details.
+.It Fl p Ar port
+Specify remote Transition server TCP port to connect to.
+See
+.Sx Remote Address Resolution
+section for more details.
+.El
+.It Xo
+.Cm torrent
+.Op Fl DdfiSs
+.Op Fl h Ar host
+.Op Fl l Ar label[,label...]
+.Op Fl p Ar port
+.Ar id...
+.Xc
+View or edit torrent information and state.
+.Pp
+The options for
+.Cm gearbox torrent
+are as follows:
+.Bl -tag -width Ds
+.It Fl D
+Delete also torrent data when deleting torrent.
+Requires also
+.Fl d
+to be specified.
+.It Fl d
+Delete torrent.
+This option does not deletes torrent data but only de-register the torrent in
+Transmission server.
+If you want do delete torrent data as well you need to specify also
+.Fl D
+option.
+.It Fl f
+Display files list represented by the torrent.
+.It Fl i
+Display torrent information, like its size, amount of transferred data and so
+on.
+.It Fl S
+Stop downloading or seeding the torrent.
+.It Fl s
+Start downloading or seeding the torrent.
+.It Fl h Ar host
+Specify remote Transition server hostname or IP address to connect to.
+See
+.Sx Remote Address Resolution
+section for more details.
+.It Fl l Ar label[,label...]
+Assign labels to the torrent.
+.It Fl p Ar port
+Specify remote Transition server TCP port to connect to.
+See
+.Sx Remote Address Resolution
+section for more details.
+.El
+.Ss Remote Address Resolution
+Hostname and port used to connect to remote Transmission server can be specified
+using
+.Fl h
+and
+.Fl p
+command-line options or using configuration file.
+Command-line options have precedence over configuration file.
+If hostname or port value is not defined on either level default value is used.
+Default value for hostname is
+.Ql localhost
+and 9091 is for port.
+See
+.El
+.Sh COLUMNS
+List of column names which can be used to display torrent information or apply
+sorting by.
+.Bl -column "comment"
+.It Li active Ta Last active time when torrent was downloaded or uploaded.
+.It Li added Ta Time when torrent was added.
+.It Li comment Ta Comment as specified in the torrent-file.
+.It Li created Ta Time when torrent-file was created.
+.It Li drate Ta Downloading rate.
+.It Li dsize Ta Amount of data were downloaded for the torrent.
+.It Li id Ta Transmission ID of the torrent.
+.It Li labels Ta List of labels tagged to the torrent.
+.It Li name Ta Name of the torrent.
+.It Li ratio Ta Ratio between amount of uploaded and downloaded data for the torrent.
+.It Li size Ta Size of the torrent data.
+.It Li status Ta Status of the torrent. One of: stopped, queued for checking,
+checking, queued for downloading, downloading, queued for seeding,
+seeding.
+.It Li urate Ta Uploading rate.
+.It Li usize Ta Amount of data were uploaded for the torrent.
+.El
+.Sh CONFIGURATION
+.Nm
+configuration file is a plain text file containing property=value pairs, every on its
+own line. Next list of properties is support.
+.Bl -column "list-columns" "integer"
+.It Sy Property Ta Sy Type Ta Sy Description
+.It Li host Ta string Ta Remote hostname to connect to.
+.It Li list-columns Ta string Ta Columns to print by list command.
+.It Li list-count Ta integer Ta Number of columns to print by list command.
+.It Li list-reverse Ta boolean Ta Reverse sorting order.
+.It Li list-sort Ta string Ta Column to sort by in list command output.
+.It Li port Ta integer Ta Remote port to connect to.
+.El
+.Pp
+Configuration file example.
+.Dl host = Qq transmission.local
+.Dl port = 9091
+.Dl list-columns = Qq id,status,size,ratio,name
+.Dl list-sort = Qq added
+.Dl list-reverse = true
+.Sh FILES
+.Bl -tag
+.It Pa ~/.config/gearbox/gearbox.conf
+Main
+.Nm
+configuration file.
+See
+.Sx CONFIGURATION
+section for file format.
+.El
+.Sh EXAMPLES
+List top ten torrents by ratio.
+.Pp
+.Dl $ gearbox list -c id,size,name -s ratio -r -n 10
+.Pp
+Add torrent and tag it with movie label.
+.Pp
+.Dl $ gearbox add -l movie file.torrent
+.Sh SEE ALSO
+.Xr  transmission-remote 1,
+.Xr  transmission-daemon 1
+.Sh AUTHORS
+.An Viacheslav Chimishuk Aq Mt vchimishuk@yandex.ru
+.Lk https://github.com/vchimishuk/gearbox
