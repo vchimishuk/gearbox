@@ -23,7 +23,7 @@ func (c *AddCommand) Name() string {
 }
 
 func (c *AddCommand) Usage() string {
-	return c.Name() + " [-S] [-h host] [-l label] [-p port] file..."
+	return c.Name() + " [-S] [-l label[,label...]] file..."
 }
 
 func (c *AddCommand) Options() []*opt.Desc {

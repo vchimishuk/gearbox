@@ -7,6 +7,7 @@ import (
 	"os/user"
 	"path/filepath"
 	"slices"
+	"strings"
 
 	"github.com/pborzenkov/go-transmission/transmission"
 	"github.com/vchimishuk/gearbox/config"
@@ -14,7 +15,7 @@ import (
 )
 
 const ProgName = "gearbox"
-const Usage = "usage: " + ProgName + " [-H] command [opt]... [arg]..."
+const Usage = "usage: " + ProgName + " [-H] [-h host] [-p port] command [opt]... [arg]..."
 
 const DefaultHost = "localhost"
 const DefaultPort = 9091
@@ -30,9 +31,13 @@ type Command interface {
 
 var Commands []Command = []Command{
 	NewAddCommand(),
+	NewDeleteCommand(),
+	NewEditCommand(),
+	NewInfoCommand(),
 	NewListCommand(),
+	NewStartCommand(),
 	NewStatsCommand(),
-	NewTorrentCommand(),
+	NewStopCommand(),
 }
 
 func printErr(err error) {
@@ -86,19 +91,68 @@ func loadConfig() (*config.Config, error) {
 	return cfg, nil
 }
 
+func splitArgs(args []string) ([]string, []string) {
+	i := 0
+	val := false
+	for i < len(args) {
+		a := args[i]
+
+		if val {
+			// Consume option's value.
+			val = false
+		} else if a == "-H" {
+			// Do nothing.
+		} else if strings.HasPrefix(a, "-h") {
+			if len(a) == len("-h") {
+				val = true
+			}
+		} else if strings.HasPrefix(a, "-p") {
+			if len(a) == len("-p") {
+				val = true
+			}
+		} else {
+			break
+		}
+		i++
+	}
+
+	return args[:i], args[i:]
+}
+
+func parseMainArgs(args []string) (opt.Options, error) {
+	desc := []*opt.Desc{
+		{"H", "", opt.ArgNone, "", "display help information and exit"},
+		{"h", "", opt.ArgString, "host", "server host name"},
+		{"p", "", opt.ArgInt, "port", "server port"},
+	}
+	opts, args, err := opt.Parse(args, desc)
+	if len(args) > 0 {
+		panic("invalid state")
+	}
+
+	return opts, err
+}
+
 func main() {
-	if len(os.Args) < 2 {
+	mainArgs, cmdArgs := splitArgs(os.Args[1:])
+
+	mainOpts, err := parseMainArgs(mainArgs)
+	if err != nil {
 		usage()
 		os.Exit(1)
 	}
-
-	if os.Args[1] == "-H" {
+	if mainOpts.Has("H") {
 		help()
 		os.Exit(1)
 	}
 
+	if len(cmdArgs) < 1 {
+		usage()
+		os.Exit(1)
+	}
+
 	i := slices.IndexFunc(Commands, func(c Command) bool {
-		return c.Name() == os.Args[1]
+		return c.Name() == cmdArgs[0]
 	})
 	if i == -1 {
 		usage()
@@ -107,15 +161,9 @@ func main() {
 
 	cmd := Commands[i]
 	cmdOpts := cmd.Options()
-	cmdOpts = append(cmdOpts, &opt.Desc{
-		"h", "", opt.ArgString, "host", "server host name",
-	})
-	cmdOpts = append(cmdOpts, &opt.Desc{
-		"p", "", opt.ArgInt, "port", "server port",
-	})
 	minArgs, maxArgs := cmd.Args()
 
-	opts, args, err := opt.Parse(os.Args[2:], cmdOpts)
+	opts, args, err := opt.Parse(cmdArgs[1:], cmdOpts)
 	if err != nil || len(args) < minArgs || len(args) > maxArgs {
 		fmt.Fprintf(os.Stderr, "usage: %s %s\n", ProgName, cmd.Usage())
 		os.Exit(1)
@@ -129,12 +177,12 @@ func main() {
 
 	host := DefaultHost
 	port := DefaultPort
-	if h, ok := opts.String("h"); ok {
+	if h, ok := mainOpts.String("h"); ok {
 		host = h
 	} else if cfg.Host != "" {
 		host = cfg.Host
 	}
-	if p, ok := opts.Int("p"); ok {
+	if p, ok := mainOpts.Int("p"); ok {
 		port = p
 	} else if cfg.Port != 0 {
 		port = cfg.Port

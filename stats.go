@@ -22,7 +22,7 @@ func (c *StatsCommand) Name() string {
 }
 
 func (c *StatsCommand) Usage() string {
-	return c.Name() + " [-h host] [-p port]"
+	return c.Name()
 }
 
 func (c *StatsCommand) Options() []*opt.Desc {

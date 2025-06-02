@@ -24,7 +24,7 @@ func (c *ListCommand) Name() string {
 }
 
 func (c *ListCommand) Usage() string {
-	return c.Name() + " [-ar] [-c column] [-h host] [-n count] [-p port] [-s column]"
+	return c.Name() + " [-ar] [-c column] [-n count] [-s column]"
 }
 
 func (c *ListCommand) Options() []*opt.Desc {

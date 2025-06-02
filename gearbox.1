@@ -9,6 +9,8 @@
 .Bl -tag -width gearbox
 .It Nm
 .Op Fl H
+.Op Fl h Ar host
+.Op Fl p Ar port
 .Oo Ar command
 .Op Ar opt ...
 .Op Ar arg ...
@@ -25,6 +27,16 @@ The following options are supported by
 .Bl -tag -width indent
 .It Fl H
 Display usage information and exit.
+.It Fl h Ar host
+Specify remote Transition server hostname or IP address to connect to.
+See
+.Sx Remote Address Resolution
+section for more details.
+.It Fl p Ar port
+Specify remote Transition server TCP port to connect to.
+See
+.Sx Remote Address Resolution
+section for more details.
 .El
 .Sh COMMANDS
 The commands are supported by
@@ -33,9 +45,7 @@ The commands are supported by
 .It Xo
 .Cm add
 .Op Fl S
-.Op Fl h Ar host
 .Op Fl l Ar label[,label...]
-.Op Fl p Ar port
 .Ar file...
 .Xc
 Add torrent-file to the server.
@@ -47,26 +57,59 @@ are as follows:
 .Bl -tag -width Ds
 .It Fl S
 Do not start downloading torrent automatically.
-.It Fl h Ar host
-Specify remote Transition server hostname or IP address to connect to.
-See
-.Sx Remote Address Resolution
-section for more details.
 .It Fl l Ar label[,label...]
 Set labels to the added torrent.
-.It Fl p Ar port
-Specify remote Transition server TCP port to connect to.
-See
-.Sx Remote Address Resolution
-section for more details.
+.El
+.It Xo
+.Cm delete
+.Op Fl d
+.Ar id...
+.Xc
+Delete torrent.
+.Pp
+The options for
+.Cm gearbox delete
+are as follows:
+.Bl -tag -width Ds
+.It Fl d
+Delete also torrent data.
+.El
+.It Xo
+.Cm edit
+.Op Fl l Ar label[,label...]
+.Ar id...
+.Xc
+Edit torrent configurations.
+.Pp
+The options for
+.Cm gearbox edit
+are as follows:
+.Bl -tag -width Ds
+.It Fl l Ar label[,label...]
+Assign labels to the torrent.
+.El
+.It Xo
+.Cm info
+.Op Fl fi
+.Ar id...
+.Xc
+Display torrent information.
+.Pp
+The options for
+.Cm gearbox info
+are as follows:
+.Bl -tag -width Ds
+.It Fl f
+Display files list represented by the torrent.
+.It Fl i
+Display torrent information, like its size, amount of transferred data and so
+on.
 .El
 .It Xo
 .Cm list
 .Op Fl ar
 .Op Fl c Ar column[,column...]
-.Op Fl h Ar host
 .Op Fl n Ar count
-.Op Fl p Ar port
 .Op Fl s Ar column
 .Xc
 List torrents managed by Transmission server.
@@ -85,96 +128,30 @@ Sort torrents in reverse order.
 List of columns to display. See
 .Sx COLUMNS
 section for the list of available columns.
-.It Fl h Ar host
-Specify remote Transition server hostname or IP address to connect to.
-See
-.Sx Remote Address Resolution
-section for more details.
 .It Fl n Ar count
 Maximum number of torrents to return in the result list.
-.It Fl p Ar port
-Specify remote Transition server TCP port to connect to.
-See
-.Sx Remote Address Resolution
-section for more details.
 .It Fl s Ar column
 Column to sort result list by. See
 .Sx COLUMNS
 section for the list of available columns.
 .El
 .It Xo
-.Cm stats
-.Op Fl h Ar host
-.Op Fl p Ar port
-.Xc
-Display server statistics.
-.Pp
-The options for
-.Cm gearbox stats
-are as follows:
-.Bl -tag -width Ds
-.It Fl h Ar host
-Specify remote Transition server hostname or IP address to connect to.
-See
-.Sx Remote Address Resolution
-section for more details.
-.It Fl p Ar port
-Specify remote Transition server TCP port to connect to.
-See
-.Sx Remote Address Resolution
-section for more details.
-.El
-.It Xo
-.Cm torrent
-.Op Fl DdfiSs
-.Op Fl h Ar host
-.Op Fl l Ar label[,label...]
-.Op Fl p Ar port
+.Cm start
 .Ar id...
 .Xc
-View or edit torrent information and state.
-.Pp
-The options for
-.Cm gearbox torrent
-are as follows:
-.Bl -tag -width Ds
-.It Fl D
-Delete also torrent data when deleting torrent.
-Requires also
-.Fl d
-to be specified.
-.It Fl d
-Delete torrent.
-This option does not deletes torrent data but only de-register the torrent in
-Transmission server.
-If you want do delete torrent data as well you need to specify also
-.Fl D
-option.
-.It Fl f
-Display files list represented by the torrent.
-.It Fl i
-Display torrent information, like its size, amount of transferred data and so
-on.
-.It Fl S
-Stop downloading or seeding the torrent.
-.It Fl s
-Start downloading or seeding the torrent.
-.It Fl h Ar host
-Specify remote Transition server hostname or IP address to connect to.
-See
-.Sx Remote Address Resolution
-section for more details.
-.It Fl l Ar label[,label...]
-Assign labels to the torrent.
-.It Fl p Ar port
-Specify remote Transition server TCP port to connect to.
-See
-.Sx Remote Address Resolution
-section for more details.
-.El
+Start downloading or seeding torrent.
+.It Xo
+.Cm stats
+.Xc
+Display server statistics.
+.It Xo
+.Cm stop
+.Ar id...
+.Xc
+Stop (pause) torrent.
 .Ss Remote Address Resolution
-Hostname and port used to connect to remote Transmission server can be specified
-using
+Hostname and port is used to connect to remote Transmission server can be
+specified using
 .Fl h
 and
 .Fl p
@@ -246,7 +223,7 @@ Add torrent and tag it with movie label.
 .Pp
 .Dl $ gearbox add -l movie file.torrent
 .Sh SEE ALSO
-.Xr  transmission-remote 1,
+.Xr  transmission-remote 1 ,
 .Xr  transmission-daemon 1
 .Sh AUTHORS
 .An Viacheslav Chimishuk Aq Mt vchimishuk@yandex.ru
