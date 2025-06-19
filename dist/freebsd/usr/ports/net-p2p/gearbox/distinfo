@@ -1,0 +1,9 @@
+TIMESTAMP = 1750324229
+SHA256 (vchimishuk-gearbox-0.0.1-be84849_GH0.tar.gz) = 5d079c907613c23778e6f3caa928696595f15957754c2f3469092a32989e4509
+SIZE (vchimishuk-gearbox-0.0.1-be84849_GH0.tar.gz) = 10076
+SHA256 (pborzenkov-go-transmission-v0.3.0_GH0.tar.gz) = 50695d80f02f150715851799111b9881ac825bbf50fe82aa75bba4b712dcc621
+SIZE (pborzenkov-go-transmission-v0.3.0_GH0.tar.gz) = 30388
+SHA256 (vchimishuk-config-ed7bd1b64558_GH0.tar.gz) = 02adca45a1b1fad780d082a943a556969b08a0537ecce616ffa65773808bb1f4
+SIZE (vchimishuk-config-ed7bd1b64558_GH0.tar.gz) = 19512
+SHA256 (vchimishuk-opt-d823c9050e21_GH0.tar.gz) = 4fcb27bc735a28e3448ffdf58c34740af1de8f6e4035e793a955bb4f0d4a1e62
+SIZE (vchimishuk-opt-d823c9050e21_GH0.tar.gz) = 17642
