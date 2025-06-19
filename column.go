@@ -79,6 +79,19 @@ var Columns []Column = []Column{
 		formatter(false),
 	},
 	&column{
+		"done",
+		"Percentage of done",
+		"DONE",
+		transmission.TorrentFieldDataDone,
+		comparator(func(t *transmission.Torrent) float64 {
+			return t.DataDone
+		}),
+		func(t *transmission.Torrent) string {
+			return fmt.Sprintf("%.0f", t.DataDone*100)
+		},
+		formatter(true),
+	},
+	&column{
 		"drate",
 		"Download rate",
 		"DRATE",
