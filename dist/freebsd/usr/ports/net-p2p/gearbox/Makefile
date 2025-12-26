@@ -14,11 +14,11 @@ USES=		go:1.21,modules
 USE_GITHUB=	yes
 GH_ACCOUNT=	vchimishuk
 GH_PROJECT=	gearbox
-GH_TAGNAME=	be84849
+GH_TAGNAME=	21697c4
 
 # $ make gomod-vendor
 GH_TUPLE=	pborzenkov:go-transmission:v0.3.0:pborzenkov_go_transmission/vendor/github.com/pborzenkov/go-transmission \
-		vchimishuk:config:ed7bd1b64558:vchimishuk_config/vendor/github.com/vchimishuk/config \
+		vchimishuk:config:f2660fcdf53b:vchimishuk_config/vendor/github.com/vchimishuk/config \
 		vchimishuk:opt:d823c9050e21:vchimishuk_opt/vendor/github.com/vchimishuk/opt
 
 PLIST_FILES=	bin/gearbox \
