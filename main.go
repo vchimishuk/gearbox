@@ -133,6 +133,36 @@ func parseMainArgs(args []string) (opt.Options, error) {
 	return opts, err
 }
 
+func parseCommand(cfg *config.Config, cmd string, args []string) (Command, []string, error) {
+	aliases := make(map[string]*config.Alias)
+	for _, a := range cfg.Aliases {
+		aliases[a.Name] = a
+	}
+
+	var pcmd string
+	var pargs []string
+	alias, ok := aliases[cmd]
+	if ok {
+		pcmd = alias.Command
+		if alias.Args != "" {
+			pargs = append(pargs, strings.Split(alias.Args, " ")...)
+		}
+		pargs = append(pargs, args...)
+	} else {
+		pcmd = cmd
+		pargs = args
+	}
+
+	i := slices.IndexFunc(Commands, func(c Command) bool {
+		return c.Name() == pcmd
+	})
+	if i == -1 {
+		return nil, nil, fmt.Errorf("invalid command: %s", pcmd)
+	}
+
+	return Commands[i], pargs, nil
+}
+
 func main() {
 	mainArgs, cmdArgs := splitArgs(os.Args[1:])
 
@@ -151,27 +181,23 @@ func main() {
 		os.Exit(1)
 	}
 
-	i := slices.IndexFunc(Commands, func(c Command) bool {
-		return c.Name() == cmdArgs[0]
-	})
-	if i == -1 {
+	cfg, err := loadConfig()
+	if err != nil {
+		printErr(err)
+		os.Exit(1)
+	}
+
+	cmd, cargs, err := parseCommand(cfg, cmdArgs[0], cmdArgs[1:])
+	if err != nil {
 		usage()
 		os.Exit(1)
 	}
 
-	cmd := Commands[i]
-	cmdOpts := cmd.Options()
 	minArgs, maxArgs := cmd.Args()
 
-	opts, args, err := opt.Parse(cmdArgs[1:], cmdOpts)
+	opts, args, err := opt.Parse(cargs, cmd.Options())
 	if err != nil || len(args) < minArgs || len(args) > maxArgs {
 		fmt.Fprintf(os.Stderr, "usage: %s %s\n", ProgName, cmd.Usage())
-		os.Exit(1)
-	}
-
-	cfg, err := loadConfig()
-	if err != nil {
-		printErr(err)
 		os.Exit(1)
 	}
 

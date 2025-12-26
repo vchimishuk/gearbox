@@ -1,9 +1,23 @@
 package config
 
-import "github.com/vchimishuk/config"
+import (
+	"errors"
+	"strings"
+
+	"github.com/vchimishuk/config"
+)
 
 var spec = &config.Spec{
 	Properties: []*config.PropertySpec{
+		&config.PropertySpec{
+			Type:    config.TypeString,
+			Name:    "alias",
+			Repeat:  true,
+			Require: false,
+			Parser: func(v any) (any, error) {
+				return parseAlias(v.(string))
+			},
+		},
 		&config.PropertySpec{
 			Type:    config.TypeString,
 			Name:    "host",
@@ -43,6 +57,12 @@ var spec = &config.Spec{
 	},
 }
 
+type Alias struct {
+	Name    string
+	Command string
+	Args    string
+}
+
 type Config struct {
 	Host        string
 	Port        int
@@ -50,12 +70,18 @@ type Config struct {
 	ListSort    string
 	ListReverse bool
 	ListCount   int
+	Aliases     []*Alias
 }
 
 func Parse(f string) (*Config, error) {
 	cfg, err := config.ParseFile(spec, f)
 	if err != nil {
 		return nil, err
+	}
+
+	var aliases []*Alias
+	for _, a := range cfg.Anys("alias") {
+		aliases = append(aliases, a.(*Alias))
 	}
 
 	return &Config{
@@ -65,5 +91,27 @@ func Parse(f string) (*Config, error) {
 		ListSort:    cfg.StringOr("list-sort", ""),
 		ListReverse: cfg.BoolOr("list-reverse", false),
 		ListCount:   cfg.IntOr("list-count", 0),
+		Aliases:     aliases,
+	}, nil
+}
+
+func parseAlias(s string) (*Alias, error) {
+	pts := strings.SplitN(s, "=", 2)
+	if len(pts) != 2 {
+		return nil, errors.New("invaid alias format")
+	}
+
+	name := strings.TrimSpace(pts[0])
+	pts = strings.SplitN(strings.TrimSpace(pts[1]), " ", 2)
+	cmd := pts[0]
+	args := ""
+	if len(pts) == 2 {
+		args = pts[1]
+	}
+
+	return &Alias{
+		Name:    name,
+		Command: cmd,
+		Args:    args,
 	}, nil
 }

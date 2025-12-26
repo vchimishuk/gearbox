@@ -191,6 +191,7 @@ configuration file is a plain text file containing property=value pairs, every o
 own line. Next list of properties is support.
 .Bl -column "list-columns" "integer"
 .It Sy Property Ta Sy Type Ta Sy Description
+.It Li alias Ta string Ta Define command alias.
 .It Li host Ta string Ta Remote hostname to connect to.
 .It Li list-columns Ta string Ta Columns to print by list command.
 .It Li list-count Ta integer Ta Number of columns to print by list command.
@@ -205,6 +206,7 @@ Configuration file example.
 .Dl list-columns = Qq id,status,size,ratio,name
 .Dl list-sort = Qq added
 .Dl list-reverse = true
+.Dl alias = Qq active = list -a -c id,status,drate,urate,name
 .Sh FILES
 .Bl -tag
 .It Pa ~/.config/gearbox/gearbox.conf
