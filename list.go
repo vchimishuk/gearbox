@@ -45,19 +45,14 @@ func (c *ListCommand) Args() (int, int) {
 func (c *ListCommand) Exec(client *transmission.Client, cfg *config.Config,
 	opts opt.Options, args []string) error {
 
-	scols := opts.StringOr("c", or(cfg.ListColumns, "id,name"))
+	scols := opts.StringOr("c", "id,name")
 	cols, err := parseColumns(scols)
 	if err != nil {
 		return err
 	}
 	fields := ColumnsToFields(cols)
 
-	ssort := ""
-	if s, ok := opts.String("s"); ok {
-		ssort = s
-	} else if cfg.ListSort != "" {
-		ssort = cfg.ListSort
-	}
+	ssort := opts.StringOr("s", "")
 	var sort Column
 	if ssort != "" {
 		var err error
@@ -83,19 +78,12 @@ func (c *ListCommand) Exec(client *transmission.Client, cfg *config.Config,
 			if opts.Has("r") {
 				c = reversed(c)
 			}
-		} else if cfg.ListReverse {
-			c = reversed(c)
 		}
 
 		slices.SortFunc(trs, c)
 	}
 
-	count := len(trs)
-	if c, ok := opts.Int("n"); ok {
-		count = c
-	} else if cfg.ListCount != 0 {
-		count = cfg.ListCount
-	}
+	count := opts.IntOr("n", len(trs))
 	colVals := make([][]string, len(cols))
 	for i, c := range cols {
 		colVals[i] = make([]string, count+1)
@@ -147,12 +135,4 @@ func reversed[T any](f func(a, b T) int) func(a, b T) int {
 	return func(a, b T) int {
 		return f(a, b) * -1
 	}
-}
-
-func or(a, b string) string {
-	if a != "" {
-		return a
-	}
-
-	return b
 }

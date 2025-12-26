@@ -193,19 +193,12 @@ own line. Next list of properties is support.
 .It Sy Property Ta Sy Type Ta Sy Description
 .It Li alias Ta string Ta Define command alias.
 .It Li host Ta string Ta Remote hostname to connect to.
-.It Li list-columns Ta string Ta Columns to print by list command.
-.It Li list-count Ta integer Ta Number of columns to print by list command.
-.It Li list-reverse Ta boolean Ta Reverse sorting order.
-.It Li list-sort Ta string Ta Column to sort by in list command output.
 .It Li port Ta integer Ta Remote port to connect to.
 .El
 .Pp
 Configuration file example.
 .Dl host = Qq transmission.local
 .Dl port = 9091
-.Dl list-columns = Qq id,status,size,ratio,name
-.Dl list-sort = Qq added
-.Dl list-reverse = true
 .Dl alias = Qq active = list -a -c id,status,drate,urate,name
 .Sh FILES
 .Bl -tag

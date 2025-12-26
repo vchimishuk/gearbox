@@ -30,30 +30,6 @@ var spec = &config.Spec{
 			Repeat:  false,
 			Require: false,
 		},
-		&config.PropertySpec{
-			Type:    config.TypeString,
-			Name:    "list-columns",
-			Repeat:  false,
-			Require: false,
-		},
-		&config.PropertySpec{
-			Type:    config.TypeString,
-			Name:    "list-sort",
-			Repeat:  false,
-			Require: false,
-		},
-		&config.PropertySpec{
-			Type:    config.TypeBool,
-			Name:    "list-reverse",
-			Repeat:  false,
-			Require: false,
-		},
-		&config.PropertySpec{
-			Type:    config.TypeInt,
-			Name:    "list-count",
-			Repeat:  false,
-			Require: false,
-		},
 	},
 }
 
@@ -64,13 +40,9 @@ type Alias struct {
 }
 
 type Config struct {
-	Host        string
-	Port        int
-	ListColumns string
-	ListSort    string
-	ListReverse bool
-	ListCount   int
-	Aliases     []*Alias
+	Host    string
+	Port    int
+	Aliases []*Alias
 }
 
 func Parse(f string) (*Config, error) {
@@ -85,13 +57,9 @@ func Parse(f string) (*Config, error) {
 	}
 
 	return &Config{
-		Host:        cfg.StringOr("host", ""),
-		Port:        cfg.IntOr("port", 0),
-		ListColumns: cfg.StringOr("list-columns", ""),
-		ListSort:    cfg.StringOr("list-sort", ""),
-		ListReverse: cfg.BoolOr("list-reverse", false),
-		ListCount:   cfg.IntOr("list-count", 0),
-		Aliases:     aliases,
+		Host:    cfg.StringOr("host", ""),
+		Port:    cfg.IntOr("port", 0),
+		Aliases: aliases,
 	}, nil
 }
 
